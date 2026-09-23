@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>歯式forMac｜Excelのセル1つに十字の歯式を</title>
+<meta name="description" content="Macで使える無料の歯式入力ツール。歯を選んでコピーするだけで、Excelのセル1つに十字（パーマー方式）の歯式を1行で入れられます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family: "ShishikiCross"; src: url("ShishikiCross.ttf") format("truetype"); font-display: swap; }
+:root {
+  --bg: #f7f9fa; --panel: #ffffff; --text: #1c2529; --muted: #5d6b72; --line: #dfe5e8;
+  --accent: #1f7a8c; --accent-soft: #e4f2f4; --accent-text: #155766; --warn-soft: #fff6e5; --warn-text: #7a4f06;
+  --cell-line: #d4d4d4; --cell-head: #f0f0f0; --on-accent: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121719; --panel: #1b2226; --text: #e8eef0; --muted: #9aa8ae; --line: #2d373c;
+    --accent: #4fb3c4; --accent-soft: #173239; --accent-text: #a9dfe8; --warn-soft: #33290f; --warn-text: #f2d08c;
+    --cell-line: #3a4247; --cell-head: #232b2f; --on-accent: #0b2a31;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121719; --panel: #1b2226; --text: #e8eef0; --muted: #9aa8ae; --line: #2d373c;
+  --accent: #4fb3c4; --accent-soft: #173239; --accent-text: #a9dfe8; --warn-soft: #33290f; --warn-text: #f2d08c;
+  --cell-line: #3a4247; --cell-head: #232b2f; --on-accent: #0b2a31;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: "Noto Sans JP", -apple-system, "Hiragino Sans", sans-serif; line-height: 1.8;
+}
+a { color: var(--accent); }
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+header { border-bottom: 1px solid var(--line); background: var(--panel); }
+header .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 12px; }
+.lang { white-space: nowrap; font-size: 14px; color: var(--muted); text-decoration: none; border: 1px solid var(--line); border-radius: 8px; padding: 2px 10px; }
+.logo { font-weight: 700; text-decoration: none; color: var(--text); font-size: 17px; white-space: nowrap; }
+nav { display: flex; gap: 18px; font-size: 14px; }
+nav a { color: var(--muted); text-decoration: none; }
+nav a:hover { color: var(--accent); }
+
+.hero { padding: 64px 0 56px; text-align: center; }
+.hero h1 { font-size: clamp(32px, 6vw, 46px); margin: 0 0 8px; letter-spacing: 0.02em; }
+.hero .lead { font-size: clamp(16px, 2.6vw, 20px); color: var(--muted); margin: 0 0 32px; }
+.sample {
+  display: inline-block; font-family: "ShishikiCross", sans-serif; font-size: clamp(40px, 9vw, 64px);
+  line-height: 1.9; padding: 0 28px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 32px;
+}
+.btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; border-radius: 10px;
+  font-size: 16px; font-weight: 500; text-decoration: none; border: 1px solid var(--accent);
+}
+.btn.primary { background: var(--accent); color: var(--on-accent); }
+.btn.ghost { color: var(--accent); background: transparent; }
+.note { font-size: 13px; color: var(--muted); margin-top: 14px; }
+
+section { padding: 56px 0; border-top: 1px solid var(--line); }
+section h2 { font-size: 24px; margin: 0 0 8px; }
+section .sub { color: var(--muted); margin: 0 0 28px; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.card h3 { font-size: 17px; margin: 0 0 6px; }
+.card p { margin: 0; color: var(--muted); font-size: 15px; }
+.card .mark { font-family: "ShishikiCross", sans-serif; font-size: 34px; line-height: 1.9; margin-bottom: 4px; }
+.step { position: relative; padding-top: 48px; }
+.step .num {
+  position: absolute; top: 20px; left: 22px; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent-text); font-weight: 700; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.excel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; max-width: 640px; margin: 0 auto; }
+.excel .bar { display: flex; gap: 10px; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.excel .bar b { font-weight: 500; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 1px 8px; }
+.sheet { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 14px; }
+.sheet th { background: var(--cell-head); color: var(--muted); font-weight: 400; font-size: 12px; border: 1px solid var(--cell-line); height: 24px; }
+.sheet th:first-child { width: 36px; }
+.sheet td { border: 1px solid var(--cell-line); height: 52px; padding: 2px 8px; vertical-align: middle; white-space: nowrap; overflow: hidden; }
+.sheet td.x { font-family: "ShishikiCross", "Noto Sans JP", sans-serif; font-size: 26px; line-height: 1.9; padding: 0 8px; }
+.sheet td.sel { outline: 2px solid #1e7145; outline-offset: -2px; }
+.caption { text-align: center; color: var(--muted); font-size: 13px; margin-top: 12px; }
+
+.marks { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px; }
+.marks div { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; text-align: center; padding: 10px 6px; font-size: 13px; color: var(--muted); }
+.marks span { display: block; font-family: "ShishikiCross", sans-serif; font-size: 30px; line-height: 1.9; color: var(--text); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chips span { background: var(--accent-soft); color: var(--accent-text); border-radius: 14px; padding: 2px 12px; font-size: 14px; }
+
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+summary { cursor: pointer; font-weight: 500; }
+details p { margin: 10px 0 0; color: var(--muted); font-size: 15px; }
+.warn { background: var(--warn-soft); color: var(--warn-text); border-radius: 12px; padding: 14px 18px; font-size: 14px; margin-top: 20px; }
+
+.dl { text-align: center; }
+.news { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 12px 20px; }
+.news dt { font-weight: 500; white-space: nowrap; }
+.news dt span { margin-left: 8px; font-size: 12px; background: var(--accent-soft); color: var(--accent-text); border-radius: 10px; padding: 1px 8px; }
+.news dd { margin: 0; color: var(--muted); }
+@media (max-width: 560px) { .news { grid-template-columns: 1fr; gap: 4px; } .news dd { margin-bottom: 12px; } }
+.spec { display: inline-grid; grid-template-columns: auto auto; gap: 4px 20px; text-align: left; font-size: 14px; color: var(--muted); margin: 24px auto 0; }
+.spec b { color: var(--text); font-weight: 500; }
+footer { border-top: 1px solid var(--line); padding: 28px 0 40px; text-align: center; color: var(--muted); font-size: 13px; }
+@media (max-width: 760px) {
+  nav { display: none; }
+}
+@media (max-width: 560px) {
+  .hero { padding: 44px 0 40px; }
+  section { padding: 44px 0; }
+  .sheet th:first-child { width: 28px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">歯式forMac</a>
+    <nav>
+      <a href="#features">できること</a>
+      <a href="#howto">使い方</a>
+      <a href="#faq">よくある質問</a>
+      <a href="#download">ダウンロード</a>
+      <a href="#news">更新情報</a>
+      <a href="#board">掲示板</a>
+    </nav>
+    <a class="lang" href="en/">English</a>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <h1>歯式forMac</h1>
+      <p class="lead">Excelのセル1つに、十字の歯式を。</p>
+      <div class="sample" data-cross="R:3,2,1|L:3,4|LL:(5),6,(6)"></div>
+      <div class="btns">
+        <a class="btn primary" href="app.html" data-goatcounter-click="use-now" data-goatcounter-title="今すぐ使う">今すぐ使う</a>
+        <a class="btn ghost" href="#download" data-goatcounter-click="hero-download" data-goatcounter-title="メインのダウンロードボタン">フォントをダウンロード</a>
+      </div>
+      <p class="note">無料・ブラウザで動きます・使う前にフォントを1つ入れてください</p>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <h2>できること</h2>
+      <p class="sub">歯を選んで、コピーして、貼り付けるだけ。</p>
+      <div class="grid3">
+        <div class="card">
+          <div class="mark" data-cross="R:7,6,5"></div>
+          <h3>1行で十字の歯式</h3>
+          <p>専用フォントで、上下の歯と十字の線を1行に収めます。Excel・Word・PowerPoint・Numbers・Pages・Keynote で使えます。</p>
+        </div>
+        <div class="card">
+          <div class="mark" data-cross="R:(6),5,(4)|LR:C,(B)"></div>
+          <h3>保険診療でよく使う表記に対応</h3>
+          <p>乳歯（A〜E）、丸（ブリッジの支台歯など）、二重丸、△などの印と、Br・P・C・MT などの略称を付けられます。</p>
+        </div>
+        <div class="card">
+          <div class="mark" data-cross="L:1,2|LL:1"></div>
+          <h3>無料・シンプル</h3>
+          <p>アプリのインストールは不要。ブラウザで開くだけで動きます。入力内容はどこにも送信されません。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="howto">
+    <div class="wrap">
+      <h2>使い方</h2>
+      <p class="sub">最初にフォントを入れておけば、あとは3ステップです。</p>
+      <div class="grid3">
+        <div class="card step">
+          <span class="num">1</span>
+          <h3>フォントを入れる（最初の1回だけ）</h3>
+          <p>ダウンロードしたzipの中の「ShishikiCross.ttf」をダブルクリックして「インストール」。使うアプリは一度終了して開き直します。</p>
+        </div>
+        <div class="card step">
+          <span class="num">2</span>
+          <h3>歯を選んでコピー</h3>
+          <p>「今すぐ使う」からツールを開き、印を選んでから歯を押して「コピー」。ネットにつながらない時は、zipの中の「歯式forMac.html」でも使えます。</p>
+        </div>
+        <div class="card step">
+          <span class="num">3</span>
+          <h3>貼り付け</h3>
+          <p>ExcelとWordは貼り付けるだけ。PowerPoint・Keynote・Pages・Numbers は、貼り付けた文字を選んでフォントを ShishikiCross に変えます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="look">
+    <div class="wrap">
+      <h2>Excelではこう見えます</h2>
+      <p class="sub">実際のフォントで表示した見本です。</p>
+      <div class="excel">
+        <div class="bar">フォント <b>ShishikiCross</b> 11</div>
+        <table class="sheet">
+          <thead><tr><th></th><th>A</th><th>B</th><th>C</th></tr></thead>
+          <tbody>
+            <tr><th>1</th><td>日付</td><td>処置</td><td>部位</td></tr>
+            <tr><th>2</th><td>4/1</td><td>Br 形成</td><td class="x sel" data-cross="L:3,4|LL:(5),6,(6)"></td></tr>
+            <tr><th>3</th><td>4/8</td><td>CR</td><td class="x" data-cross="R:2,1|L:1"></td></tr>
+            <tr><th>4</th><td>4/15</td><td>乳歯 抜歯</td><td class="x" data-cross="LR:C"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">「今すぐ使う」から、実際の操作画面をすぐに使えます。</p>
+
+      <h3 style="margin:40px 0 12px;font-size:18px">使える印</h3>
+      <div class="marks">
+        <div><span data-cross="R:6"></span>そのまま</div>
+        <div><span data-cross="R:(6)"></span>丸</div>
+        <div><span data-cross="R:((6))"></span>二重丸</div>
+        <div><span data-cross="R:!6"></span>丸に縦線</div>
+        <div><span data-cross="R:x6"></span>丸にバツ</div>
+        <div><span data-cross="R:^6"></span>三角</div>
+        <div><span data-cross="LR:C"></span>乳歯 A〜E</div>
+      </div>
+      <div class="chips">
+        <span>残</span><span>欠</span><span>Br</span><span>P</span><span>部</span><span>C</span><span>Pul</span><span>Per</span><span>G</span><span>Hys</span><span>WSD</span><span>MT</span><span>FMC</span><span>CR</span><span>In</span><span>PD</span><span>FD</span><span>抜歯</span><span>自由入力</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <h2>よくある質問</h2>
+      <details>
+        <summary>□（四角）や英字が並んで表示されます</summary>
+        <p>フォント「ShishikiCross」が入っていないか、セルのフォントが別のものになっています。フォントをインストールしてExcelを開き直すか、セルのフォントを ShishikiCross に変えてください。</p>
+      </details>
+      <details>
+        <summary>PowerPoint・Keynote・Pages・Numbers で英字が並びます</summary>
+        <p>これらのアプリは、貼り付けるときにフォントを外します。貼り付けた文字を選んで、フォントを「ShishikiCross」に変えてください。先に空の文字ボックスのフォントを ShishikiCross にしておき、「ペーストしてスタイルを合わせる」で貼り付ける方法もあります。</p>
+      </details>
+      <details>
+        <summary>Excelの上の入力欄（数式バー）では英字や□に見えます</summary>
+        <p>数式バーは専用フォントを使わないため、別の文字に見えますが問題ありません。セルに正しく表示されていれば大丈夫です。</p>
+      </details>
+      <details>
+        <summary>ネットにつながっていなくても使えますか？</summary>
+        <p>使えます。zipの中の「歯式forMac.html」をダブルクリックすると、ネットなしで同じように動きます。</p>
+      </details>
+      <details>
+        <summary>別のパソコンでファイルを開いたら崩れました</summary>
+        <p>そのパソコンにもフォントのインストールが必要です。ファイルを渡すときは、ShishikiCross.ttf も一緒に渡してください。</p>
+      </details>
+      <details>
+        <summary>フォントを入れずに使えますか？</summary>
+        <p>「形式」を「Excel用2行」や「テキスト1行」に切り替えると、フォントなしでも使えます（見た目は専用フォントより簡易になります）。</p>
+      </details>
+      <details>
+        <summary>WindowsやiPadで使えますか？</summary>
+        <p>動作確認はMacのみです。フォントはWindowsでも使える形式で作ってあり、ShishikiCross.ttf を右クリックして「インストール」すれば、Windows版Excelでも表示できる見込みです。iPadはフォントのインストールに別のアプリが必要です。試した方は、下の掲示板で結果を教えていただけると助かります。</p>
+      </details>
+      <div class="warn">本ツールは無保証です。カルテ・レセプト等への記載内容は、必ずご自身でご確認ください。</div>
+    </div>
+  </section>
+
+  <section id="download" class="dl">
+    <div class="wrap">
+      <h2>ダウンロード</h2>
+      <p class="sub">フォント（必須）と、ネットなしでも使えるツール本体・説明書（日本語・英語）が入っています。</p>
+      <a class="btn primary" href="shishiki-for-mac.zip" download data-goatcounter-click="download-zip" data-goatcounter-title="zipのダウンロード">歯式forMac.zip をダウンロード</a>
+      <div>
+        <div class="spec">
+          <b>バージョン</b><span>1.2（2026年9月23日）</span>
+          <b>対応</b><span>Mac（Safari / Chrome）。Excel・Word・PowerPoint・Numbers・Pages・Keynote</span>
+          <b>料金</b><span>無料</span>
+          <b>中身</b><span>歯式forMac.html、ShishikiCross.ttf、説明書、利用規約</span>
+          <b>利用条件</b><span>無料で使えます（医院での業務利用もOK）。無断の改変・再配布・販売は禁止です。<a href="terms.html">利用規約</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section id="news">
+  <div class="wrap">
+    <h2>更新情報</h2>
+    <dl class="news">
+      <dt>2026.09.23<span>v1.2</span></dt>
+      <dd>利用規約を定めました。</dd>
+      <dt>2026.09.23<span>v1.1</span></dt>
+      <dd>Word・PowerPoint・Numbers・Pages・Keynote に対応しました（以前は PowerPoint などに貼ると表が作られていました）。<b>フォントを入れ直してください。</b>v1.0 で入れた歯式はそのまま表示されます。英語表示に対応しました。</dd>
+      <dt>2026.09.23<span>v1.0</span></dt>
+      <dd>公開しました。</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="board">
+  <div class="wrap">
+    <h2>ご要望・不具合の報告</h2>
+    <p class="sub">「こんな表記がほしい」「うまく動かない」などは、掲示板にお寄せください。</p>
+    <div class="grid3">
+      <div class="card">
+        <h3>ご要望・ご質問</h3>
+        <p style="margin-bottom:14px">追加してほしい印や略称、使い方の質問など。</p>
+        <a class="btn ghost" href="https://github.com/Uni20260227/shishiki-for-mac/discussions" data-goatcounter-click="board" data-goatcounter-title="掲示板" target="_blank" rel="noopener">掲示板を開く</a>
+      </div>
+      <div class="card">
+        <h3>不具合の報告</h3>
+        <p style="margin-bottom:14px">表示がおかしい、コピーできないなど。お使いの環境（Mac / Windows、Excelのバージョン）も書いてください。</p>
+        <a class="btn ghost" href="https://github.com/Uni20260227/shishiki-for-mac/issues/new?template=bug.yml" data-goatcounter-click="bug-report" data-goatcounter-title="不具合の報告" target="_blank" rel="noopener">不具合を報告する</a>
+      </div>
+    </div>
+    <p class="note">書き込みには GitHub の無料アカウントが必要です。患者さんの情報など、個人情報は書き込まないでください。</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Uni20260227 ・ <a href="terms.html">利用規約</a> ・ 本ツールは無保証です<br>このページの訪問数は GoatCounter で集計しています（クッキーは使わず、個人を特定する情報は集めません）</div>
+</footer>
+
+<script>
+// 見本の歯式を専用フォントの文字に変換する（記号番号は build_font.py と同じ）
+// 書き方：R=右上, L=左上, LR=右下, LL=左下, U=1列だけ。(6)=丸, ((6))=二重丸, !6=丸に縦線, x6=丸にバツ, ^6=三角
+const N = 67, BAR = 0xF300, TEETH = '12345678ABCDE';
+function sym(t) {
+  let mark = 0, s = t;
+  if (/^\(\(.+\)\)$/.test(s)) { mark = 2; s = s.slice(2, -2); }
+  else if (/^\(.+\)$/.test(s)) { mark = 1; s = s.slice(1, -1); }
+  else if (s[0] === '!') { mark = 3; s = s.slice(1); }
+  else if (s[0] === 'x') { mark = 4; s = s.slice(1); }
+  else if (s[0] === '^') return [66, 1 + TEETH.indexOf(s.slice(1))];
+  return [1 + mark * 13 + TEETH.indexOf(s)];
+}
+const col = (u, l) => String.fromCharCode(0xE000 + (u || 0) * N + (l || 0));
+function cross(spec) {
+  const q = { R: [], L: [], LR: [], LL: [], U: [] };
+  spec.split('|').forEach(part => {
+    const i = part.indexOf(':');
+    if (i < 0) return;
+    q[part.slice(0, i)] = part.slice(i + 1).split(',').flatMap(sym);
+  });
+  if (q.U.length) return q.U.map(u => col(u, 0)).join('');
+  const wR = Math.max(q.R.length, q.LR.length), wL = Math.max(q.L.length, q.LL.length);
+  let s = '';
+  for (let i = 0; i < wR; i++) s += col(q.R[i - (wR - q.R.length)], q.LR[i - (wR - q.LR.length)]);
+  s += String.fromCharCode(BAR);
+  for (let i = 0; i < wL; i++) s += col(q.L[i], q.LL[i]);
+  return s;
+}
+document.querySelectorAll('[data-cross]').forEach(el => { el.textContent = cross(el.dataset.cross); });
+</script>
+<script data-goatcounter="https://sns-uni.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

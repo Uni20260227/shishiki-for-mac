@@ -1,0 +1,56 @@
+歯式forMac 利用規約
+====================
+
+© 2026 Uni20260227. All rights reserved.
+
+歯式forMac（ツール本体・紹介ページ・説明書を含みます。以下「本ツール」）の著作権は作者（Uni20260227）にあります。
+
+■ できること
+・個人、歯科医院などの医療機関、教育機関で、無料で本ツールを使うこと（業務での利用を含みます）
+・本ツールで作った歯式を含む書類（Excel・Word など）を、自由に使ったり配ったりすること
+・本ツールの紹介ページへのリンクや、本ツールの紹介
+
+■ 作者の許可なくしてはいけないこと
+・本ツールのプログラムを改変すること、改変したものを配布・公開すること
+・本ツールを再配布すること（他のサイトへの掲載、他のソフトへの同梱など）
+・本ツールを販売すること、有料の製品やサービスに組み込むこと
+・本ツールを自分が作ったものとして示すこと
+
+■ フォントについて
+専用フォント「ShishikiCross」の数字・英字の形は DejaVu Sans を元にしているため、フォントファイルは同梱の「フォントのライセンス（DejaVu）.txt」（Bitstream Vera / DejaVu のライセンス）に従います。
+
+■ 保証と責任
+本ツールは無保証です。本ツールを使ったことによる損害について、作者は責任を負いません。カルテ・レセプト等への記載内容は、必ずご自身でご確認ください。
+
+■ 変更
+この規約は予告なく変更することがあります。最新の規約は紹介ページに掲載します。
+https://uni20260227.github.io/shishiki-for-mac/terms.html
+
+
+----------------------------------------------------------------------
+Shishiki for Mac - Terms of use
+
+© 2026 Uni20260227. All rights reserved.
+
+You may:
+- use Shishiki for Mac for free, personally, in dental clinics and other
+  medical institutions, and in education (including professional use);
+- freely use and share documents you create with it;
+- link to and introduce the tool.
+
+You may not, without the author's permission:
+- modify the program, or distribute or publish modified versions;
+- redistribute the tool (for example, host it on another site or bundle it
+  with other software);
+- sell it or include it in a paid product or service;
+- present it as your own work.
+
+Font: the digit and letter shapes of ShishikiCross are based on DejaVu Sans,
+so the font file itself is covered by the Bitstream Vera / DejaVu license
+included with it.
+
+No warranty. The author is not liable for any damage resulting from use of
+the tool. Always check what you write in patient records yourself.
+
+These terms may change without notice. The latest version is at
+https://uni20260227.github.io/shishiki-for-mac/terms.html

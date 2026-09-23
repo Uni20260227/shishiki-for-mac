@@ -1,0 +1,24 @@
+name: 不具合の報告 / Bug report
+description: うまく動かないときはこちら / Something doesn't work
+body:
+  - type: markdown
+    attributes:
+      value: 患者さんの情報など、個人情報は書かないでください。 / Please don't post any patient information.
+  - type: dropdown
+    id: os
+    attributes:
+      label: パソコン / Computer
+      options: [Mac, Windows, iPad, その他 / Other]
+    validations:
+      required: true
+  - type: input
+    id: excel
+    attributes:
+      label: Excelのバージョン（わかれば） / Excel version (if known)
+  - type: textarea
+    id: what
+    attributes:
+      label: 何をしたら、どうなりましたか？ / What did you do, and what happened?
+      placeholder: 例：コピーして貼り付けたら、□が並んだ
+    validations:
+      required: true
